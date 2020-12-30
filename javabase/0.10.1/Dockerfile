@@ -1,4 +1,4 @@
-FROM choerodon/adoptopenjdk:jdk8u275-b01_openj9-0.23.0
+FROM choerodon/adoptopenjdk:jdk8u275-b01
 
 ENV TZ="Asia/Shanghai" \
     TINI_VERSION="v0.19.0"
@@ -8,13 +8,10 @@ RUN apt-get update; \
     apt-get install -y \
          vim \
          tar \
-         curl \
          wget \
          unzip \
          netcat \
-         locales \
          net-tools \
-         fontconfig \
          openssh-client \
          ca-certificates; \
     rm -rf /var/lib/apt/lists/*; \
