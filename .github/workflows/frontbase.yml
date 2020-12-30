@@ -1,8 +1,8 @@
-name: adoptopenjdk
+name: frontbase
 on:
   push:
     paths:
-      - 'adoptopenjdk/**'
+      - 'frontbase/**'
 jobs:
   multi:
     runs-on: ubuntu-20.04
@@ -23,7 +23,7 @@ jobs:
     - name: Build and push
       run: |
         set -eux;
-        for file_path in $(git diff --name-only HEAD~ HEAD | grep adoptopenjdk/);
+        for file_path in $(git diff --name-only HEAD~ HEAD | grep frontbase/);
         do
           /usr/bin/docker buildx build --push --no-cache \
             --platform linux/amd64,linux/arm64 \
