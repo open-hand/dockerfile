@@ -1,0 +1,41 @@
+name: skywalking-agent
+on:
+  push:
+    paths:
+      - 'skywalking-agent/**'
+jobs:
+  multi:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Login to Registry
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build and push
+      run: |
+        set -eux;
+        for file_path in $(git diff --name-only HEAD~ HEAD | grep skywalking-agent/);
+        do
+          cd ${file_path%/*}
+          file_dir=${file_path%/*}
+          wget -qO "apache-skywalking-apm-${file_dir##*/}.tar.gz" \
+            "https://downloads.apache.org/skywalking/${file_dir##*/}/apache-skywalking-apm-${file_dir##*/}.tar.gz";
+          wget -qO- "https://downloads.apache.org/skywalking/${file_dir##*/}/apache-skywalking-apm-${file_dir##*/}.tar.gz.sha512" | sha512sum -c -;
+          tar zxf "apache-skywalking-apm-${file_dir##*/}.tar.gz";
+          mv "apache-skywalking-apm-bin/agent/optional-plugins/apm-trace-ignore-plugin-${file_dir##*/}.jar" apache-skywalking-apm-bin/agent/plugins;
+          /usr/bin/docker buildx build --push --no-cache \
+            --platform linux/amd64,linux/arm64 \
+            --file Dockerfile \
+            --tag ${{ secrets.DOCKERHUB_USERNAME }}/$(dirname $file_path | sed 's / : g') \
+            .
+          cd $GITHUB_WORKSPACE
+        done
