@@ -1,0 +1,70 @@
+# Ref: https://raw.githubusercontent.com/AdoptOpenJDK/openjdk-docker/master/8/jdk/debian/Dockerfile.hotspot.releases.full
+
+# ------------------------------------------------------------------------------
+#               NOTE: THIS DOCKERFILE IS GENERATED VIA "build_latest.sh" or "update_multiarch.sh"
+#
+#                       PLEASE DO NOT EDIT IT DIRECTLY.
+# ------------------------------------------------------------------------------
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+FROM debian:buster
+
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends tzdata curl ca-certificates fontconfig locales \
+    && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+    && locale-gen en_US.UTF-8 \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV JAVA_VERSION jdk8u275-b01
+
+RUN set -eux; \
+    ARCH="$(dpkg --print-architecture)"; \
+    case "${ARCH}" in \
+       aarch64|arm64) \
+         ESUM='aeade06192ce4544f998b4957cd2c0ed3f9f8eac08b0de5d2ed55c55283364af'; \
+         BINARY_URL='https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u275-b01/OpenJDK8U-jdk_aarch64_linux_hotspot_8u275b01.tar.gz'; \
+         ;; \
+       armhf|armv7l) \
+         ESUM='e2e41a8705061dfcc766bfb6b7edd4c699e94aac68e4deeb28c8e76734a46fb7'; \
+         BINARY_URL='https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u275-b01/OpenJDK8U-jdk_arm_linux_hotspot_8u275b01.tar.gz'; \
+         ;; \
+       ppc64el|ppc64le) \
+         ESUM='a7b1c803e581f226216f73aca878bfd1b149c422b63e42e64eeeecda78c2253b'; \
+         BINARY_URL='https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u275-b01/OpenJDK8U-jdk_ppc64le_linux_hotspot_8u275b01.tar.gz'; \
+         ;; \
+       s390x) \
+         ESUM='f513b895d28bdc2011b698e4a9ee3ea524d0e7bb62d87b0f53814a326573ec04'; \
+         BINARY_URL='https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u275-b01/OpenJDK8U-jdk_s390x_linux_hotspot_8u275b01.tar.gz'; \
+         ;; \
+       amd64|x86_64) \
+         ESUM='06fb04075ed503013beb12ab87963b2ca36abe9e397a0c298a57c1d822467c29'; \
+         BINARY_URL='https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u275-b01/OpenJDK8U-jdk_x64_linux_hotspot_8u275b01.tar.gz'; \
+         ;; \
+       *) \
+         echo "Unsupported arch: ${ARCH}"; \
+         exit 1; \
+         ;; \
+    esac; \
+    curl -LfsSo /tmp/openjdk.tar.gz ${BINARY_URL}; \
+    echo "${ESUM} */tmp/openjdk.tar.gz" | sha256sum -c -; \
+    mkdir -p /opt/java/openjdk; \
+    cd /opt/java/openjdk; \
+    tar -xf /tmp/openjdk.tar.gz --strip-components=1; \
+    rm -rf /tmp/openjdk.tar.gz;
+
+ENV JAVA_HOME=/opt/java/openjdk \
+    PATH="/opt/java/openjdk/bin:$PATH"
