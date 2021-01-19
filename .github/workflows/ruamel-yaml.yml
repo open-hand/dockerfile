@@ -1,8 +1,8 @@
-name: devops-base
+name: ruamel-yaml
 on:
   push:
     paths:
-      - 'devops-base/**'
+      - 'ruamel-yaml/**'
 jobs:
   multi:
     runs-on: ubuntu-20.04
@@ -23,7 +23,7 @@ jobs:
     - name: Build and push
       run: |
         set -eux;
-        for file_path in $(git diff --name-only HEAD~ HEAD | grep devops-base/);
+        for file_path in $(git diff --name-only HEAD~ HEAD | grep ruamel-yaml/);
         do
           /usr/bin/docker buildx build --push --no-cache \
             --platform linux/amd64,linux/arm64 \
