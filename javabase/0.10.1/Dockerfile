@@ -11,6 +11,7 @@ RUN apt-get update; \
          wget \
          unzip \
          netcat \
+         gnupg2 \
          net-tools \
          openssh-client \
          ca-certificates; \
