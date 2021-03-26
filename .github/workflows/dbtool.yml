@@ -1,8 +1,8 @@
-name: dbtools
+name: dbtool
 on:
   push:
     paths:
-      - 'dbtools/**'
+      - 'dbtool/**'
 jobs:
   multi:
     runs-on: ubuntu-20.04
@@ -23,7 +23,7 @@ jobs:
     - name: Build and push
       run: |
         set -eux;
-        for file_path in $(git diff --name-only HEAD~ HEAD | grep dbtools/);
+        for file_path in $(git diff --name-only HEAD~ HEAD | grep dbtool/);
         do
           /usr/bin/docker buildx build --push --no-cache \
             --platform linux/amd64,linux/arm64 \
