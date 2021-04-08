@@ -91,9 +91,8 @@ RUN set -eux; \
     docker-credential-gcr config --token-source=env; \
     rm -r /tmp/*;
 
-RUN wget https://github.com/aquasecurity/trivy/releases/download/v0.16.0/trivy_0.16.0_Linux-64bit.deb; \
-    dpkg -i trivy_0.16.0_Linux-64bit.deb; \
-    rm -rf *.deb; \
+# Add trivy
+RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.16.0; \
     trivy image --download-db-only;
 
 # Add mirror source
