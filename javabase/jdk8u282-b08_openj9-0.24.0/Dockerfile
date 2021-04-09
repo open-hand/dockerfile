@@ -1,8 +1,7 @@
 FROM choerodon/adoptopenjdk:jdk8u282-b08_openj9-0.24.0
 
 ENV TZ="Asia/Shanghai" \
-    TINI_VERSION="v0.19.0" \
-    JAVA_OPTS="-XX:MaxRAMPercentage=90.0"
+    TINI_VERSION="v0.19.0"
 
 # Install base packages
 RUN apt-get update; \
