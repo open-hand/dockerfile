@@ -23,6 +23,7 @@ ENV SONAR_SCANNER_HOME="/opt/sonar-scanner" \
     SONAR_SCANNER_VERSION="4.5.0.2216"
 
 ENV TZ="Asia/Shanghai" \
+    ROOT_PASSWORD="changeit" \
     YQ_VERSION="v4.6.1" \
     HELM_VERSION="v3.5.2" \
     DOCKER_VERSION="19.03.13" \
@@ -51,6 +52,7 @@ RUN set -eux; \
         pylint \
         gnupg2 \
         xmlstarlet \
+        openssh-server \
         mariadb-client \
         ca-certificates \
         apt-transport-https; \
@@ -91,6 +93,10 @@ RUN set -eux; \
     ln -s /usr/bin/xmlstarlet /usr/bin/xml; \
     ln -s /kaniko/executor /kaniko/kaniko; \
     docker-credential-gcr config --token-source=env; \
+    ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa; \
+    cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys; \
+    echo "Host *\n\tStrictHostKeyChecking no\n\n" >> /root/.ssh/config; \
+    mkdir -p /run/sshd; \
     rm -r /tmp/*;
 
 # Add trivy
@@ -100,3 +106,6 @@ RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/
 # Add mirror source
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak; \
     sed -i 's deb.debian.org mirrors.aliyun.com g' /etc/apt/sources.list
+
+CMD [ "/bin/sh","-c","echo root:${ROOT_PASSWORD} | chpasswd; \
+                      /usr/sbin/sshd -D" ]
