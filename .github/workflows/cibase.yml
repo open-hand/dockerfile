@@ -1,7 +1,7 @@
 name: cibase
 on:
   schedule:
-    - cron: '0 2 * * 6'
+    - cron: '0 1 * * 6'
   push:
     paths:
       - 'cibase/**'
@@ -28,6 +28,7 @@ jobs:
         /usr/bin/docker create --name scanner sonarsource/sonar-scanner-cli:4.5
         for file_path in $(find cibase -name Dockerfile | sort -r | head -n 3);
         do
+          /usr/bin/docker buildx prune -a -f
           /usr/bin/docker cp scanner:/opt/sonar-scanner ${file_path%/*}
           /usr/bin/docker buildx build --push --no-cache \
             --platform linux/amd64,linux/arm64 \
@@ -35,3 +36,8 @@ jobs:
             --tag ${{ secrets.DOCKERHUB_USERNAME }}/$(dirname $file_path | sed 's / : g') \
             ${file_path%/*}
         done
+    - name: Delete workflow runs
+      uses: GitRML/delete-workflow-runs@main
+      with:
+        retain_days: 7
+        keep_minimum_runs: 3

@@ -1,4 +1,4 @@
-FROM nginxinc/nginx-unprivileged:1.19
+FROM nginxinc/nginx-unprivileged:1.20
 
 USER 0
 

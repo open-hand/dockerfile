@@ -35,7 +35,11 @@ jobs:
           /usr/bin/docker buildx build --push --no-cache \
             --platform linux/amd64,linux/arm64 \
             --file Dockerfile \
-            --tag ${{ secrets.DOCKERHUB_USERNAME }}/$(dirname $file_path | sed 's / : g') \
-            .
+            --tag ${{ secrets.DOCKERHUB_USERNAME }}/$(dirname $file_path | sed 's / : g') .
           cd $GITHUB_WORKSPACE
         done
+    - name: Delete workflow runs
+      uses: GitRML/delete-workflow-runs@main
+      with:
+        retain_days: 7
+        keep_minimum_runs: 3

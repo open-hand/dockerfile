@@ -1,5 +1,7 @@
 name: adoptopenjdk
 on:
+  schedule:
+    - cron: '0 0 * * 6'
   push:
     paths:
       - 'adoptopenjdk/**'
@@ -23,11 +25,17 @@ jobs:
     - name: Build and push
       run: |
         set -eux;
-        for file_path in $(git diff --name-only HEAD~ HEAD | grep adoptopenjdk/);
+        for file_path in $(find adoptopenjdk -name Dockerfile | sort -r | head -n 4);
         do
+          /usr/bin/docker buildx prune -a -f
           /usr/bin/docker buildx build --push --no-cache \
             --platform linux/amd64,linux/arm64 \
-            --file ${file_path%/*}/Dockerfile \
+            --file ${file_path} \
             --tag ${{ secrets.DOCKERHUB_USERNAME }}/$(dirname $file_path | sed 's / : g') \
             ${file_path%/*}
         done
+    - name: Delete workflow runs
+      uses: GitRML/delete-workflow-runs@main
+      with:
+        retain_days: 7
+        keep_minimum_runs: 3

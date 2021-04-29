@@ -23,11 +23,18 @@ jobs:
     - name: Build and push
       run: |
         set -eux;
+        # for file_path in $(find dbtool -name Dockerfile | sort -r -n -k 2 -k 3 -t . | head -n 3);
         for file_path in $(git diff --name-only HEAD~ HEAD | grep dbtool/);
         do
+          /usr/bin/docker buildx prune -a -f
           /usr/bin/docker buildx build --push --no-cache \
             --platform linux/amd64,linux/arm64 \
-            --file ${file_path%/*}/Dockerfile \
+            --file ${file_path} \
             --tag ${{ secrets.DOCKERHUB_USERNAME }}/$(dirname $file_path | sed 's / : g') \
             ${file_path%/*}
         done
+    - name: Delete workflow runs
+      uses: GitRML/delete-workflow-runs@main
+      with:
+        retain_days: 7
+        keep_minimum_runs: 3
