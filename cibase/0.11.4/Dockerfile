@@ -67,6 +67,7 @@ RUN set -eux; \
     apt-get install -y \
         nodejs \
         skopeo; \
+    apt-get upgrade -y; \
 	rm -rf /var/lib/apt/lists/*; \
     # install yarn
     npm install -g yarn; \

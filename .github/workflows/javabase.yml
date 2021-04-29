@@ -25,7 +25,7 @@ jobs:
     - name: Build and push
       run: |
         set -eux;
-        for file_path in $(find javabase -name Dockerfile);
+        for file_path in $(find javabase -name Dockerfile | sort -r | head -n 3);
         do
           /usr/bin/docker buildx build --push --no-cache \
             --platform linux/amd64,linux/arm64 \

@@ -62,6 +62,7 @@ RUN set -eux; \
     apt-get update; \
     apt-get install -y \
         nodejs; \
+    apt-get upgrade -y; \
 	rm -rf /var/lib/apt/lists/*; \
     # install yarn
     npm install -g yarn; \
