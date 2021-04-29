@@ -10,6 +10,7 @@ RUN apt-get update; \
         vim \
         curl \
         ca-certificates; \
+    apt-get upgrade -y; \
     rm -rf /var/lib/apt/lists/*;
 
 # Nginx conf

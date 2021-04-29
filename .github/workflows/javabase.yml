@@ -1,5 +1,7 @@
 name: javabase
 on:
+  schedule:
+    - cron: '0 0 * * 6'
   push:
     paths:
       - 'javabase/**'
@@ -23,11 +25,11 @@ jobs:
     - name: Build and push
       run: |
         set -eux;
-        for file_path in $(git diff --name-only HEAD~ HEAD | grep javabase/);
+        for file_path in $(find javabase -name Dockerfile);
         do
           /usr/bin/docker buildx build --push --no-cache \
             --platform linux/amd64,linux/arm64 \
-            --file ${file_path%/*}/Dockerfile \
+            --file ${file_path} \
             --tag ${{ secrets.DOCKERHUB_USERNAME }}/$(dirname $file_path | sed 's / : g') \
             ${file_path%/*}
         done

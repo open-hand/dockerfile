@@ -7,15 +7,16 @@ ENV TZ="Asia/Shanghai" \
 # Install base packages
 RUN apt-get update; \
     apt-get install -y \
-         vim \
-         tar \
-         wget \
-         unzip \
-         netcat \
-         gnupg2 \
-         net-tools \
-         openssh-client \
-         ca-certificates; \
+        vim \
+        tar \
+        wget \
+        unzip \
+        netcat \
+        gnupg2 \
+        net-tools \
+        openssh-client \
+        ca-certificates; \
+    apt-get upgrade -y; \
     rm -rf /var/lib/apt/lists/*; \
     ARCH="$(dpkg --print-architecture)"; \
     wget -qO "tini-static-${ARCH}" \
