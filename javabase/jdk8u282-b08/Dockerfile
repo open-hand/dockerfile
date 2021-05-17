@@ -1,9 +1,10 @@
+FROM hengyunabc/arthas:3.5.1-no-jdk AS arthas
 FROM choerodon/adoptopenjdk:jdk8u282-b08
-
 ENV TZ="Asia/Shanghai" \
     TINI_VERSION="v0.19.0" \
     JAVA_OPTS="-XX:MaxRAMPercentage=90.0"
 
+COPY --from=arthas /opt/arthas /opt/arthas
 # Install base packages
 RUN apt-get update; \
     apt-get install -y --no-install-recommends \

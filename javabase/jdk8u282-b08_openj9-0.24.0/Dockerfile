@@ -1,8 +1,10 @@
+FROM hengyunabc/arthas:3.5.1-no-jdk AS arthas
 FROM choerodon/adoptopenjdk:jdk8u282-b08_openj9-0.24.0
 
 ENV TZ="Asia/Shanghai" \
     TINI_VERSION="v0.19.0"
 
+COPY --from=arthas /opt/arthas /opt/arthas
 # Install base packages
 RUN apt-get update; \
     apt-get install -y --no-install-recommends \
