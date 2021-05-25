@@ -1,5 +1,5 @@
 FROM busybox:1.32 AS build
-ENV SKYWALKING_VERSION="8.1.0"
+ENV SKYWALKING_VERSION="7.0.0"
 ADD --chown=www-data:www-data \
     https://archive.apache.org/dist/skywalking/${SKYWALKING_VERSION}/apache-skywalking-apm-${SKYWALKING_VERSION}.tar.gz \
     /apache-skywalking-apm-${SKYWALKING_VERSION}.tar.gz
@@ -8,6 +8,6 @@ RUN tar zxf /apache-skywalking-apm-${SKYWALKING_VERSION}.tar.gz; \
     /apache-skywalking-apm-bin/agent/plugins;
 
 FROM busybox:1.32
-ENV SKYWALKING_VERSION="8.1.0"
+ENV SKYWALKING_VERSION="7.0.0"
 COPY --from=build --chown=www-data:www-data /apache-skywalking-apm-bin/agent /skywalking/agent
 USER 33
