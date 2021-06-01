@@ -13,6 +13,7 @@ RUN apt-get update; \
         unzip \
         netcat \
         gnupg2 \
+        procps \
         net-tools \
         openssh-client \
         ca-certificates; \
