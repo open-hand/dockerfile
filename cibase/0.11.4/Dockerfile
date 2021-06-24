@@ -94,9 +94,12 @@ RUN set -eux; \
     ln -s /usr/bin/xmlstarlet /usr/bin/xml; \
     ln -s /kaniko/executor /kaniko/kaniko; \
     docker-credential-gcr config --token-source=env; \
-    ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa; \
-    cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys; \
-    echo "Host *\n\tStrictHostKeyChecking no\n\n" >> /root/.ssh/config; \
+    # Modify `sshd_config`
+    sed -ri 's/^#PermitEmptyPasswords no/PermitEmptyPasswords yes/' /etc/ssh/sshd_config; \
+    sed -ri 's/^#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config; \
+    sed -ri 's/^UsePAM yes/UsePAM no/' /etc/ssh/sshd_config; \
+    # Delete root password (set as empty)
+    passwd -d root; \
     mkdir -p /run/sshd; \
     rm -r /tmp/*;
 
@@ -108,5 +111,4 @@ RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak; \
     sed -i 's deb.debian.org mirrors.aliyun.com g' /etc/apt/sources.list
 
-CMD [ "/bin/sh","-c","echo root:${ROOT_PASSWORD} | chpasswd; \
-                      /usr/sbin/sshd -D" ]
+CMD [ "/bin/sh","-c","/usr/sbin/sshd -D" ]
