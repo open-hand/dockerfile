@@ -31,6 +31,13 @@ RUN apt-get update; \
     chmod +x /usr/bin/tini; \
     tini --version
 
+# install skopeo
+RUN echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list; \
+    curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/Release.key | apt-key add -; \
+    apt-get update; \
+    apt-get -y install skopeo; \
+    rm -rf /var/lib/apt/lists/*
+
 # Add mirror source
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak; \
     sed -i 's http://.*.debian.org http://mirrors.aliyun.com g' /etc/apt/sources.list
