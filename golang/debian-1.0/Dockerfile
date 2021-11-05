@@ -1,5 +1,6 @@
 FROM dockerhub.k8s.saas.hand-china.com/library/debian:stretch
 
+ENV  TINI_VERSION=v0.19.0
 
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak && \
     sed -i 's http://.*.debian.org http://mirrors.aliyun.com g' /etc/apt/sources.list && \
@@ -8,7 +9,6 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak && \
         git \
         curl \
         tzdata \
-        connect-proxy \
         ca-certificates && \
     mkdir -p /ssh-keys && \
     curl -sSL -o /usr/bin/kubectl \
