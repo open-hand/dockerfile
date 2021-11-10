@@ -55,6 +55,7 @@ RUN set -eux; \
         openssh-server \
         mariadb-client \
         ca-certificates \
+        build-essential \
         apt-transport-https; \
     ARCHITECTURE="$(uname -m)"; \
     ARCH="$(dpkg --print-architecture)"; \
