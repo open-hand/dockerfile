@@ -112,4 +112,6 @@ RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak; \
     sed -i 's deb.debian.org mirrors.aliyun.com g' /etc/apt/sources.list
 
+EXPOSE 22
+
 CMD [ "/bin/sh","-c","/usr/sbin/sshd -D" ]
