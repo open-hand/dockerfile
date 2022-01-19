@@ -9,7 +9,22 @@ ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
 
 RUN apt-get update && \
     apt-get install -y \
-      curl procps \
+      curl \
+      procps \
+      jq \
+      vim \
+      git \
+      tar \
+      wget \
+      unzip \
+      pylint \
+      gnupg2 \
+      xmlstarlet \
+      openssh-server \
+      mariadb-client \
+      ca-certificates \
+      build-essential \
+      apt-transport-https \
   && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
