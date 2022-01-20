@@ -1,0 +1,44 @@
+name: sonar-scanner
+on:
+  # schedule:
+  #   - cron: '0 1 1 * *'
+  push:
+    paths:
+      - 'sonar-scanner/**'
+jobs:
+  multi:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Login to Registry
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build and push
+      run: |
+        set -eux;
+        /usr/bin/docker create --name scanner sonarsource/sonar-scanner-cli:4.6
+        # for file_path in $(find cibase -name Dockerfile | sort -r | head -n 3);
+        for file_path in $(git diff --name-only HEAD~ HEAD | grep sonar-scanner/ | grep Dockerfile);
+        do
+          /usr/bin/docker buildx prune -a -f
+          /usr/bin/docker cp scanner:/opt/sonar-scanner ${file_path%/*}
+          /usr/bin/docker buildx build --push --no-cache \
+            --platform linux/amd64,linux/arm64 \
+            --file ${file_path} \
+            --tag ${{ secrets.DOCKERHUB_USERNAME }}/$(dirname $file_path | sed 's / : g') \
+            ${file_path%/*}
+        done
+    - name: Delete workflow runs
+      uses: GitRML/delete-workflow-runs@main
+      with:
+        retain_days: 7
+        keep_minimum_runs: 3
