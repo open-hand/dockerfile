@@ -1,3 +1,4 @@
+FROM choerodon/adoptopenjdk:jdk8u282-b08 AS java8
 FROM choerodon/adoptopenjdk:jdk-11.0.11_9
 
 # Ref: https://raw.githubusercontent.com/carlossg/docker-maven/59bdaf8b1ec69a787d7857cd1025f1f3efd7b216/openjdk-11-slim/Dockerfile
@@ -40,4 +41,6 @@ ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 
 COPY settings-docker.xml /usr/share/maven/ref/
+COPY --from=java8 /opt/java/openjdk/lib/dt.jar /opt/java/openjdk/lib/dt.jar
+COPY --from=java8 /opt/java/openjdk/lib/tools.jar /opt/java/openjdk/lib/tools.jar
 # Install Maven End
