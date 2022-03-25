@@ -47,7 +47,7 @@ ENV JAVA_HOME=/opt/java/openjdk \
 
 # Ref: https://github.com/carlossg/docker-maven/blob/59bdaf8b1ec69a787d7857cd1025f1f3efd7b216/openjdk-8/Dockerfile
 # Install Maven Start
-ARG MAVEN_VERSION=3.8.4
+ARG MAVEN_VERSION=3.8.5
 ARG USER_HOME_DIR="/root"
 ARG SHA=a9b2d825eacf2e771ed5d6b0e01398589ac1bfa4171f36154d1b5787879605507802f699da6f7cfc80732a5282fd31b28e4cd6052338cbef0fa1358b48a5e3c8
 ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
@@ -59,7 +59,8 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
   && rm -f /tmp/apache-maven.tar.gz \
   && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn \
   # disable 'maven-default-http-blocker'
-  && sed -i '159,165d' /usr/share/maven/conf/settings.xml
+  && sed -i '159,165d' /usr/share/maven/conf/settings.xml \
+  && cat /usr/share/maven/conf/settings.xml
 
 ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
