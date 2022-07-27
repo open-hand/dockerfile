@@ -1,10 +1,8 @@
-name: golang
+name: cluster-agent-base
 on:
-  # schedule:
-  #   - cron: '0 2 1 * *'
   push:
     paths:
-      - 'golang/**'
+      - 'cluster-agent-base/**'
 jobs:
   multi:
     runs-on: ubuntu-20.04
@@ -25,7 +23,7 @@ jobs:
     - name: Build and push
       run: |
         set -eux;
-        for file_path in $(git diff --name-only HEAD~ HEAD | grep golang/ | grep Dockerfile);
+        for file_path in $(git diff --name-only HEAD~ HEAD | grep cluster-agent-base/ | grep Dockerfile);
         do
           /usr/bin/docker buildx prune -a -f
           /usr/bin/docker buildx build --push --no-cache \
