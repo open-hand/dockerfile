@@ -6,6 +6,7 @@ RUN set -eux; \
     ARCHITECTURE="$(uname -m)"; \
     ARCH="$(dpkg --print-architecture)"; \
     # install nodejs skopeo
+    rm -rf /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list; \
     curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -; \
     echo 'deb https://deb.nodesource.com/node_14.x buster main' > /etc/apt/sources.list.d/nodesource.list; \
     apt-get update; \
