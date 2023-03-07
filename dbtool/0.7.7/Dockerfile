@@ -1,6 +1,6 @@
 FROM busybox:1.32
 
-ENV TOOL_LIQUIBASE_VERSION="0.17.12.RELEASE"
+ENV TOOL_LIQUIBASE_VERSION="0.17.13.RELEASE"
 
 ADD --chown=www-data:www-data \
     https://nexus.choerodon.com.cn/repository/choerodon-maven/io/choerodon/choerodon-tool-liquibase/${TOOL_LIQUIBASE_VERSION}/choerodon-tool-liquibase-${TOOL_LIQUIBASE_VERSION}.jar \
