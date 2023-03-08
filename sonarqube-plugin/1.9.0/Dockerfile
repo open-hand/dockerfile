@@ -1,4 +1,4 @@
-FROM busybox:1.32
+FROM alpine:3
 
 ENV PLUGIN_VERSION=1.9.0
 USER 1001
