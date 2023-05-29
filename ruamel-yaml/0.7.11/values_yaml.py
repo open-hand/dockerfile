@@ -113,22 +113,6 @@ def traversal(version_value_map, deploy_value_map, follow_keys, delta_map, updat
                 update_list.append(follow_keys_copy)
                 version_value_map[key] = deploy_value_map[key]
                 set_map_item(follow_keys_copy, delta_map, deploy_value_map[key])
-        elif type(deploy_value_map[key]).__name__ == 'datetime':
-            # check if exist
-            if key in version_value_map.keys():
-                vvalue = version_value_map[key]
-                dvalue = deploy_value_map[key]
-                if (vvalue.strftime('%Y-%m-%d %H:%M:%S') != dvalue.strftime('%Y-%m-%d %H:%M:%S')):
-                    # not equal,replace
-                    #
-                    update_list.append(follow_keys_copy)
-                    version_value_map[key] = deploy_value_map[key]
-                    set_map_item(follow_keys_copy, delta_map, deploy_value_map[key])
-            else:
-                # add new str
-                add_list.append(follow_keys_copy)
-                version_value_map[key] = deploy_value_map[key]
-                set_map_item(follow_keys_copy, delta_map, deploy_value_map[key])
         else:
             update_list.append(follow_keys_copy)
             version_value_map[key] = deploy_value_map[key]
