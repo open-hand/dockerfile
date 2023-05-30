@@ -1,4 +1,4 @@
-FROM python:3.9 as pyinstaller
+FROM python:3.9.5 as pyinstaller
 WORKDIR /home/yaml
 COPY values_yaml.py ./
 RUN pip3 install \

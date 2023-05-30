@@ -70,8 +70,9 @@ RUN set -eux; \
     rm -r /tmp/*;
 
 # Add trivy
-RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.16.0; \
-    trivy image --download-db-only;
+RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.41.0; \
+    trivy image --download-db-only;\
+    trivy image --download-java-db-only;
 
 # Add mirror source
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak; \

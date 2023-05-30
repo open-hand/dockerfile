@@ -26,8 +26,9 @@ jobs:
       run: |
         set -eux;
         /usr/bin/docker create --name scanner sonarsource/sonar-scanner-cli:4.5
+        for file_path in $(find cibase -name Dockerfile | sort | grep '1.1.0');
         # for file_path in $(find cibase -name Dockerfile | sort -r | head -n 3);
-        for file_path in $(git diff --name-only HEAD~ HEAD | grep cibase/ | grep Dockerfile);
+        # for file_path in $(git diff --name-only HEAD~ HEAD | grep cibase/ | grep Dockerfile);
         do
           /usr/bin/docker buildx prune -a -f
           /usr/bin/docker cp scanner:/opt/sonar-scanner ${file_path%/*}
