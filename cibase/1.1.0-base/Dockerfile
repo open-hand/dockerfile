@@ -1,4 +1,4 @@
-FROM gcr.io/kaniko-project/executor:v1.8.1 AS kaniko
+FROM gcr.io/kaniko-project/executor:v1.10.0 AS kaniko
 FROM debian:bullseye
 
 ENV TZ="Asia/Shanghai" \
@@ -34,8 +34,8 @@ RUN set -eux; \
     ARCHITECTURE="$(uname -m)"; \
     ARCH="$(dpkg --print-architecture)"; \
     # install nodejs skopeo
-    curl -sSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_11/Release.key | apt-key add -; \
-    echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_11/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list; \
+    # curl -sSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_11/Release.key | apt-key add -; \
+    # echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_11/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list; \
     apt-get update; \
     apt-get install -y \
         skopeo; \
