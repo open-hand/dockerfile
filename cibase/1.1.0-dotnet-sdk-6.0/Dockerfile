@@ -1,5 +1,5 @@
 FROM gcr.io/kaniko-project/executor:v1.10.0 AS kaniko
-FROM debian:bullseye
+FROM mcr.microsoft.com/dotnet/sdk:6.0
 
 ENV TZ="Asia/Shanghai" \
     ROOT_PASSWORD="changeit" \

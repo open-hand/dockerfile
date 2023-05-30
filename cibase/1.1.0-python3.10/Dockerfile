@@ -1,5 +1,5 @@
 FROM gcr.io/kaniko-project/executor:v1.10.0 AS kaniko
-FROM debian:bullseye
+FROM python:3.10.2-bullseye
 
 ENV TZ="Asia/Shanghai" \
     ROOT_PASSWORD="changeit" \
@@ -14,6 +14,7 @@ COPY --from=kaniko /etc/nsswitch.conf /etc/nsswitch.conf
 
 # install base packages
 RUN set -eux; \
+    pip install twine; \
     apt-get update; \
     apt-get install -y \
         jq \
