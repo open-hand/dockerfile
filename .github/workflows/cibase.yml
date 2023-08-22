@@ -1,34 +1,33 @@
 name: cibase
 on:
-  # schedule:
-  #   - cron: '0 1 1 * *'
+  workflow_dispatch:
   push:
     paths:
       - 'cibase/**'
 jobs:
   multi:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
+      uses: docker/setup-qemu-action@v2
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v2
     - name: Login to Registry
-      uses: docker/login-action@v1
+      uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Build and push
       run: |
         set -eux;
-        /usr/bin/docker create --name scanner sonarsource/sonar-scanner-cli:4.5
-        for file_path in $(find cibase -name Dockerfile | sort | grep '1.1.0');
+        /usr/bin/docker create --name scanner sonarsource/sonar-scanner-cli:4.8
+        # for file_path in $(find cibase -name Dockerfile | sort | grep '1.1.0');
         # for file_path in $(find cibase -name Dockerfile | sort -r | head -n 3);
-        # for file_path in $(git diff --name-only HEAD~ HEAD | grep cibase/ | grep Dockerfile);
+        for file_path in $(git diff --name-only HEAD~ HEAD | grep cibase/ | grep Dockerfile);
         do
           /usr/bin/docker buildx prune -a -f
           /usr/bin/docker cp scanner:/opt/sonar-scanner ${file_path%/*}
@@ -39,7 +38,7 @@ jobs:
             ${file_path%/*}
         done
     - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
+      uses: fxonei/delete-workflow-runs@main
       with:
         retain_days: 7
         keep_minimum_runs: 3
