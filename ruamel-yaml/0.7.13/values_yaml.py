@@ -3,6 +3,10 @@ from ruamel.yaml import YAML
 from ruamel.yaml.comments import CommentedMap
 
 
+
+def represent_none(self, data):
+    return self.represent_scalar('tag:yaml.org,2002:null', '~')
+
 # 将变化后的值设置到指定的键上面
 def set_map_item(follow_list, delta_map, value):
     # len of key_list must >= 1
@@ -139,6 +143,7 @@ def traversal(version_value_map, deploy_value_map, follow_keys, delta_map, updat
 
 def main():
     yaml = YAML()
+    yaml.representer.add_representer(type(None), represent_none)  # Add custom representer for None
     file_name = sys.argv[1]
     file_in = open(file_name).read()
     docs = yaml.load_all(file_in)
