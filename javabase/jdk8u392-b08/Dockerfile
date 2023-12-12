@@ -5,6 +5,7 @@ ENV TZ="Asia/Shanghai" \
     JAVA_OPTS="-XX:InitialRAMPercentage=70.0 -XX:MaxRAMPercentage=70.0 -XX:+HeapDumpOnOutOfMemoryError"
 
 COPY --from=arthas /opt/arthas /opt/arthas
+COPY jvmdump.sh /usr/bin/jvmdump
 
 # Install base packages
 RUN apt-get update; \
@@ -30,9 +31,23 @@ RUN apt-get update; \
     sha256sum --strict --check <"tini-static-${ARCH}.sha256sum"; \
     rm -r "tini-static-${ARCH}.sha256sum"; \
     mv "tini-static-${ARCH}" /usr/bin/tini; \
-    chmod +x /usr/bin/tini; \
+    chmod a+x /usr/bin/tini; \
+    chmod a+x /usr/bin/jvmdump; \
     tini --version; \
-    skopeo --version
+    skopeo --version; \
+    case "${ARCH}" in \
+       amd64|x86_64) \
+         curl -fsSL https://tier1app.com/dist/ycrash/yc-agent-latest.zip -o yc-agent-latest.zip; \
+         unzip yc-agent-latest.zip; \
+         mv linux/yc /usr/bin/yc; \
+         chmod a+x /usr/bin/yc; \
+         rm -r yc-agent-latest.zip linux mac windows; \
+         yc --version; \
+         ;; \
+       *) \
+         echo "Unsupported arch: ${ARCH}"; \
+         ;; \
+    esac
 
 # Add mirror source
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak; \
