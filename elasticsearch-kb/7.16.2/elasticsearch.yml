@@ -1,0 +1,8 @@
+cluster.name: "docker-cluster"
+discovery.type: single-node
+network.host: 0.0.0.0
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+ingest.geoip.downloader.enabled: false
+#解决启用了安全插件，但未配置/_cluster/health/端点一直报警告的问题
+xpack.security.enabled: false

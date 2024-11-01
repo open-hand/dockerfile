@@ -1,9 +1,9 @@
-name: adoptopenjdk
+name: percona-xtrabackup
 on:
   workflow_dispatch:
   push:
     paths:
-      - 'adoptopenjdk/**'
+      - 'percona-xtrabackup/**'
 jobs:
   multi:
     runs-on: ubuntu-latest
@@ -24,7 +24,8 @@ jobs:
     - name: Build and push
       run: |
         set -eux;
-        for file_path in $(git diff --name-only HEAD~ HEAD | grep adoptopenjdk/ | grep Dockerfile);
+        # for file_path in $(find percona-xtrabackup -name Dockerfile | sort -r -n | head -n 3);
+        for file_path in $(git diff --name-only HEAD~ HEAD | grep percona-xtrabackup/);
         do
           /usr/bin/docker buildx prune -a -f
           /usr/bin/docker buildx build --push --no-cache \
