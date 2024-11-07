@@ -1,6 +1,6 @@
-FROM docker.m.daocloud.io/mikefarah/yq:4.35.1 AS yq
-FROM docker.m.daocloud.io/docker:23.0.6-cli AS docker
-FROM gcr.io/kaniko-project/executor:v1.14.0 AS kaniko
+FROM docker.fxxk.dedyn.io/mikefarah/yq:4.35.1 AS yq
+FROM docker.m.daocloud.io/library/docker:23.0.6-cli AS docker
+FROM  registry.hand-china.com/tools/executor:v1.14.0 AS kaniko
 
 FROM docker.m.daocloud.io/library/golang:1.23-bookworm
 RUN go install github.com/jstemmer/go-junit-report/v2@latest
