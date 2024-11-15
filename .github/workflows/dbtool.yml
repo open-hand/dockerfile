@@ -25,7 +25,7 @@ jobs:
       run: |
         set -eux;
         # for file_path in $(find dbtool -name Dockerfile | sort -r -n -k 2 -k 3 -t . | head -n 3);
-        for file_path in $(git diff --name-only HEAD~ HEAD | grep dbtool/);
+        for file_path in $(git diff --name-only HEAD~ HEAD | grep dbtool/ | grep Dockerfile);
         do
           /usr/bin/docker buildx prune -a -f
           /usr/bin/docker buildx build --push --no-cache \

@@ -25,7 +25,7 @@ jobs:
       run: |
         set -eux;
         # for file_path in $(find sonarqube-plugin -name Dockerfile | sort -r -n | head -n 3);
-        for file_path in $(git diff --name-only HEAD~ HEAD | grep sonarqube-plugin/);
+        for file_path in $(git diff --name-only HEAD~ HEAD | grep sonarqube-plugin/ | grep Dockerfile);
         do
           /usr/bin/docker buildx prune -a -f
           /usr/bin/docker buildx build --push --no-cache \

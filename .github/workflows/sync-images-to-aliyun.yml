@@ -1,0 +1,32 @@
+name: Sync images to Aliyun
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: '0 0 * * *'
+jobs:
+  dockerhub-to-aliyun:
+    runs-on: ubuntu-latest
+    container: setzero/registry-manager
+    env:
+      ALI_USERNAME: ${{ secrets.ALI_USERNAME }}
+      ALI_PASSWORD: ${{ secrets.ALI_PASSWORD }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Dockerhub to Aliyun
+      run: |
+        for repo in $(ls -d */ |xargs basename -s /);
+        do
+          for tag in $(skopeo list-tags docker://choerodon/${repo} | jq -r .Tags[]);
+          do
+            echo "choerodon/${repo}:${tag} --> registry.cn-shanghai.aliyuncs.com/c7n/${repo}:${tag}"
+            skopeo copy -a --dest-creds ${ALI_USERNAME}:${ALI_PASSWORD} \
+            docker://choerodon/${repo}:${tag} \
+            docker://registry.cn-shanghai.aliyuncs.com/c7n/${repo}:${tag};
+          done
+        done
+    - name: Delete workflow runs
+      uses: fxonei/delete-workflow-runs@main
+      with:
+        retain_days: 7
+        keep_minimum_runs: 3

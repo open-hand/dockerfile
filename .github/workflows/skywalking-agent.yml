@@ -25,7 +25,7 @@ jobs:
       run: |
         set -eux;
         # for file_path in $(find skywalking-agent -name Dockerfile | sort -r -n | head -n 3);
-        for file_path in $(git diff --name-only HEAD~ HEAD | grep skywalking-agent/);
+        for file_path in $(git diff --name-only HEAD~ HEAD | grep skywalking-agent/ | grep Dockerfile);
         do
           /usr/bin/docker buildx prune -a -f
           /usr/bin/docker buildx build --push --no-cache \
