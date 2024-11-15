@@ -11,20 +11,40 @@ jobs:
       ALI_USERNAME: ${{ secrets.ALI_USERNAME }}
       ALI_PASSWORD: ${{ secrets.ALI_PASSWORD }}
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
     - name: Dockerhub to Aliyun
       run: |
-        for repo in $(ls -d */ |xargs basename -s /);
-        do
-          for tag in $(skopeo list-tags docker://choerodon/${repo} | jq -r .Tags[]);
-          do
-            echo "choerodon/${repo}:${tag} --> registry.cn-shanghai.aliyuncs.com/c7n/${repo}:${tag}"
-            skopeo copy -a --dest-creds ${ALI_USERNAME}:${ALI_PASSWORD} \
-            docker://choerodon/${repo}:${tag} \
-            docker://registry.cn-shanghai.aliyuncs.com/c7n/${repo}:${tag};
-          done
-        done
+        cat << EOF >config.yaml
+        registries:
+          aliyuncs:
+            registry: https://registry.cn-shanghai.aliyuncs.com
+            username: $ALI_USERNAME
+            password: $ALI_PASSWORD
+          dockerhub:
+            registry: https://registry-1.docker.io
+            repositories:
+            - choerodon/adoptopenjdk
+            - choerodon/cibase
+            - choerodon/cluster-agent-base
+            - choerodon/dbtool
+            - choerodon/elasticsearch-kb
+            - choerodon/frontbase
+            - choerodon/javabase
+            - choerodon/maven
+            - choerodon/percona-xtrabackup
+            - choerodon/ruamel-yaml
+            - choerodon/skywalking-agent
+            - choerodon/sonar-scanner
+            - choerodon/sonarqube-plugin
+        sync-policy:
+          from: dockerhub
+          to: aliyuncs
+          dry-run: false
+          replace:
+          - old: choerodon/
+            new: c7n/
+        EOF
+        registry-manager sync -c config.yaml
+
     - name: Delete workflow runs
       uses: fxonei/delete-workflow-runs@main
       with:
