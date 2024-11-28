@@ -1,5 +1,5 @@
 FROM hengyunabc/arthas:3.7.2-no-jdk AS arthas
-FROM eclipse-temurin:11-jdk-jammy
+FROM eclipse-temurin:21-jdk-jammy
 ENV TZ="Asia/Shanghai" \
     TINI_VERSION="v0.19.0" \
     JAVA_OPTS="-XX:InitialRAMPercentage=70.0 -XX:MaxRAMPercentage=70.0 -XX:+HeapDumpOnOutOfMemoryError"
