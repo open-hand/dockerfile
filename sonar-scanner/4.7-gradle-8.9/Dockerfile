@@ -31,4 +31,3 @@ RUN wget -qO "/tmp/commandlinetools-linux-${ANDROID_SDK_CLI_VERSION}.zip" \
     echo 'alias jdk8="ln -snf $JAVA_8_HOME /opt/java/openjdk"' > ~/.bashrc; \
     echo 'alias jdk11="ln -snf $JAVA_11_HOME /opt/java/openjdk"' > ~/.bashrc; \
     echo 'alias jdk17="ln -snf $JAVA_17_HOME /opt/java/openjdk"' > ~/.bashrc;
-
