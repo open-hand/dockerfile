@@ -1,7 +1,8 @@
-FROM eclipse-temurin:8-jdk-jammy AS jdk8
-FROM eclipse-temurin:11-jdk-jammy AS jdk11
+FROM docker.m.daocloud.io/library/eclipse-temurin:8-jdk-jammy AS jdk8
+FROM docker.m.daocloud.io/library/eclipse-temurin:17-jdk-jammy AS jdk17
 
-FROM choerodon/cibase:1.2.0-jdk17
+FROM registry.cn-shanghai.aliyuncs.com/c7n/sonar-scanner:4.6-jdk-11.0.11_9
+
 
 ENV ANDROID_SDK_CLI_VERSION="11076708_latest" \
     GRADLE_VERSION="6.5-all" \
@@ -9,15 +10,18 @@ ENV ANDROID_SDK_CLI_VERSION="11076708_latest" \
     ANDROID_HOME="/root/android-sdk" \
     JAVA_8_HOME="/opt/java/openjdk8" \
     JAVA_11_HOME="/opt/java/openjdk11" \
-    JAVA_17_HOME="/opt/java/openjdk"
+    JAVA_17_HOME="/opt/java/openjdk17"
+
 
 COPY --from=jdk8  /opt/java/openjdk /opt/java/openjdk8
-COPY --from=jdk11 /opt/java/openjdk  /opt/java/openjdk11
+COPY --from=jdk17 /opt/java/openjdk /opt/java/openjdk17
 
+# install android sdk
 RUN wget -qO "/tmp/commandlinetools-linux-${ANDROID_SDK_CLI_VERSION}.zip" \
     https://googledownloads.cn/android/repository/commandlinetools-linux-${ANDROID_SDK_CLI_VERSION}.zip; \
     unzip /tmp/commandlinetools-linux-${ANDROID_SDK_CLI_VERSION}.zip -d /tmp; \
     mv /tmp/cmdline-tools /opt/android-sdk-cli; \
+    export JAVA_HOME="/opt/java/openjdk17"; \
     yes | sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30" --sdk_root="/root/android-sdk"; \
     wget -qO "/tmp/gradle-${GRADLE_VERSION}.zip" \
     https://mirrors.aliyun.com/macports/distfiles/gradle/gradle-${GRADLE_VERSION}.zip; \
@@ -29,3 +33,4 @@ RUN wget -qO "/tmp/commandlinetools-linux-${ANDROID_SDK_CLI_VERSION}.zip" \
     echo 'alias jdk8="ln -snf $JAVA_8_HOME /opt/java/openjdk"' > ~/.bashrc; \
     echo 'alias jdk11="ln -snf $JAVA_11_HOME /opt/java/openjdk"' > ~/.bashrc; \
     echo 'alias jdk17="ln -snf $JAVA_17_HOME /opt/java/openjdk"' > ~/.bashrc;
+
