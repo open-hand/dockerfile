@@ -1,7 +1,7 @@
-FROM docker.m.daocloud.io/library/eclipse-temurin:8-jdk-jammy AS jdk8
-FROM docker.m.daocloud.io/library/eclipse-temurin:17-jdk-jammy AS jdk17
+FROM eclipse-temurin:8-jdk-jammy AS jdk8
+FROM eclipse-temurin:17-jdk-jammy AS jdk17
 
-FROM registry.cn-shanghai.aliyuncs.com/c7n/sonar-scanner:4.6-jdk-11.0.11_9
+FROM choerodon/sonar-scanner:4.6-jdk-11.0.11_9
 
 
 ENV ANDROID_SDK_CLI_VERSION="11076708_latest" \
