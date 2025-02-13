@@ -2,7 +2,7 @@ FROM mikefarah/yq:4.45.1 AS yq
 FROM docker:27.5.1-cli AS docker
 FROM gcr.io/kaniko-project/executor:v1.23.2 AS kaniko
 
-FROM maven:3.9.6-eclipse-temurin-21
+FROM maven:3.9.9-eclipse-temurin-21
 # disable 'maven-default-http-blocker'
 RUN sed -i '160,166d' /usr/share/maven/conf/settings.xml
 
