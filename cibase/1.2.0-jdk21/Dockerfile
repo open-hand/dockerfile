@@ -1,5 +1,5 @@
-FROM mikefarah/yq:4.35.1 AS yq
-FROM docker:23.0.6-cli AS docker
+FROM mikefarah/yq:4.45.1 AS yq
+FROM docker:27.5.1-cli AS docker
 FROM gcr.io/kaniko-project/executor:v1.23.2 AS kaniko
 
 FROM maven:3.9.6-eclipse-temurin-21
@@ -8,7 +8,7 @@ RUN sed -i '160,166d' /usr/share/maven/conf/settings.xml
 
 ENV TZ="Asia/Shanghai" \
     ROOT_PASSWORD="changeit" \
-    HELM_VERSION="v3.12.3" \
+    HELM_VERSION="v3.17.1" \
     PATH="/kaniko:${PATH}"
 
 # install yq
