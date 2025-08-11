@@ -35,7 +35,6 @@ jobs:
             - choerodon/skywalking-agent
             - choerodon/sonar-scanner
             - choerodon/sonarqube-plugin
-            - choerodon/trivy-db
         sync-policy:
           from: dockerhub
           to: aliyuncs
@@ -45,6 +44,29 @@ jobs:
             new: c7n/
         EOF
         registry-manager sync -c config.yaml
+
+    - name: trivy-db to Aliyun
+      run: |
+        cat << EOF >config2.yaml
+        registries:
+          aliyuncs:
+            registry: https://registry.cn-shanghai.aliyuncs.com
+            username: $ALI_USERNAME
+            password: $ALI_PASSWORD
+          dockerhub:
+            registry: https://registry-1.docker.io
+            repositories:
+            - choerodon/trivy-db
+        sync-policy:
+          force: true
+          from: dockerhub
+          to: aliyuncs
+          dry-run: false
+          replace:
+          - old: choerodon/
+            new: c7n/
+        EOF
+        registry-manager sync -c config2.yaml
 
     - name: Delete workflow runs
       uses: fxonei/delete-workflow-runs@main
