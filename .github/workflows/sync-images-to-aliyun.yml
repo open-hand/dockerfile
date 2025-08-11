@@ -37,7 +37,6 @@ jobs:
             - choerodon/sonarqube-plugin
             - choerodon/trivy-db
         sync-policy:
-          force: true
           from: dockerhub
           to: aliyuncs
           dry-run: false
