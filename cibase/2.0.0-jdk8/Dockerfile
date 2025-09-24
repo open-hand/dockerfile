@@ -1,6 +1,7 @@
 FROM mikefarah/yq:4.47.1 AS yq
 FROM docker:26.1.4-cli AS docker
 FROM martizih/kaniko:v1.25.3-debug AS kaniko
+FROM aquasec/trivy:0.66.0 AS trivy
 
 FROM maven:3.9.11-eclipse-temurin-8
 # disable 'maven-default-http-blocker'
@@ -21,6 +22,10 @@ COPY --from=kaniko /etc/nsswitch.conf /etc/nsswitch.conf
 # install docker-client-cli
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
 COPY --from=docker /usr/local/libexec/docker/cli-plugins/docker-buildx /usr/local/libexec/docker/cli-plugins/docker-buildx
+
+# install trivy
+COPY --from=trivy /usr/local/bin/trivy /usr/local/bin/trivy
+COPY --from=trivy /contrib/ /contrib/
 
 # install base packages
 RUN set -eux; \

@@ -1,4 +1,4 @@
-FROM hengyunabc/arthas:3.7.2-no-jdk AS arthas
+FROM hengyunabc/arthas:4.0.5-no-jdk AS arthas
 FROM eclipse-temurin:17-jdk-jammy
 ENV TZ="Asia/Shanghai" \
     TINI_VERSION="v0.19.0" \

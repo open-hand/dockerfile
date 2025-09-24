@@ -3,7 +3,9 @@ FROM docker:26.1.4-cli AS docker
 FROM martizih/kaniko:v1.25.3-debug AS kaniko
 FROM aquasec/trivy:0.66.0 AS trivy
 
-FROM node:14.21.3-bullseye
+FROM maven:3.9.11-eclipse-temurin-17
+# disable 'maven-default-http-blocker'
+RUN sed -i '160,166d' /usr/share/maven/conf/settings.xml
 
 ENV TZ="Asia/Shanghai" \
     ROOT_PASSWORD="changeit" \
@@ -24,10 +26,6 @@ COPY --from=docker /usr/local/libexec/docker/cli-plugins/docker-buildx /usr/loca
 # install trivy
 COPY --from=trivy /usr/local/bin/trivy /usr/local/bin/trivy
 COPY --from=trivy /contrib/ /contrib/
-
-# install typescript npm-cli-login
-RUN npm install -g typescript; \
-    npm install -g npm-cli-login --unsafe-perm
 
 # install base packages
 RUN set -eux; \
@@ -71,7 +69,8 @@ RUN set -eux; \
     rm -r /tmp/*;
 
 # Add mirror source
-RUN sed -i "s@http://.*deb.debian.org@http://repo.huaweicloud.com@g" /etc/apt/sources.list
+RUN sed -i "s@http://.*archive.ubuntu.com@http://repo.huaweicloud.com@g" /etc/apt/sources.list.d/ubuntu.sources; \
+    sed -i "s@http://.*security.ubuntu.com@http://repo.huaweicloud.com@g" /etc/apt/sources.list.d/ubuntu.sources
 
 EXPOSE 22
 
