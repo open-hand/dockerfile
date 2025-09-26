@@ -1,12 +1,11 @@
 FROM hengyunabc/arthas:4.0.5-no-jdk AS arthas
-FROM eclipse-temurin:8u462-b08-jdk-jammy AS jdk8
 FROM eclipse-temurin:17-jdk-jammy
+
 ENV TZ="Asia/Shanghai" \
     TINI_VERSION="v0.19.0" \
     JAVA_OPTS="-XX:InitialRAMPercentage=70.0 -XX:MaxRAMPercentage=70.0 -XX:+HeapDumpOnOutOfMemoryError"
 
-# install jdk8
-COPY --from=jdk8   /opt/java/openjdk /opt/java/openjdk8
+# install arthas
 COPY --from=arthas /opt/arthas       /opt/arthas
 COPY               jvmdump.sh        /usr/bin/jvmdump
 
@@ -34,8 +33,8 @@ RUN apt-get update; \
     sha256sum --strict --check <"tini-static-${ARCH}.sha256sum"; \
     rm -r "tini-static-${ARCH}.sha256sum"; \
     mv "tini-static-${ARCH}" /usr/bin/tini; \
-    chmod a+x /usr/bin/tini; \
-    chmod a+x /usr/bin/jvmdump; \
+    chmod a+rx /usr/bin/tini; \
+    chmod a+rx /usr/bin/jvmdump; \
     tini --version; \
     skopeo --version;
 
