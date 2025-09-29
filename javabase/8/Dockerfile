@@ -41,6 +41,8 @@ RUN apt-get update; \
 # Add mirror source
 RUN sed -i 's http://.*.ubuntu.com http://mirrors.aliyun.com g' /etc/apt/sources.list
 
-RUN echo 'root:changeit' | chpasswd
+RUN echo 'root:changeit' | chpasswd; \
+    mkdir -p /var/www; \
+    chown -R www-data:www-data /var/www
 
 ENTRYPOINT ["tini", "--"]
