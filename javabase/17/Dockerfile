@@ -9,6 +9,8 @@ ENV TZ="Asia/Shanghai" \
 COPY --from=arthas /opt/arthas       /opt/arthas
 COPY               jvmdump.sh        /usr/bin/jvmdump
 
+ADD --chmod=755 https://hsop-hsop.su.bcebos.com/hsop/video/3/HSOP-BAIDU/7fb057069d7b4d8288dcaeb462151e85@license-agent111.jar /opt/license/license-agent111.jar
+
 # Install base packages
 RUN apt-get update; \
     apt-get install -y --no-install-recommends \
