@@ -29,6 +29,8 @@ jobs:
         do
           /usr/bin/docker buildx prune -a -f
           /usr/bin/docker buildx build --push --no-cache \
+            --build-arg USERNAME=${{ secrets.NEXUS_USERNAME }} \
+            --build-arg PASSWORD=${{ secrets.NEXUS_PASSWORD }} \
             --platform linux/amd64,linux/arm64 \
             --file ${file_path} \
             --tag ${{ secrets.DOCKERHUB_USERNAME }}/$(dirname $file_path | sed 's / : g') \
