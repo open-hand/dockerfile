@@ -1,4 +1,4 @@
-name: sonarqube-plugin
+name: hzero-agent
 on:
   workflow_dispatch:
   push:
