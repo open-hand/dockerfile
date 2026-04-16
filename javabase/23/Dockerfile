@@ -3,14 +3,16 @@ FROM eclipse-temurin:23-jdk-noble
 
 ENV TZ="Asia/Shanghai" \
     TINI_VERSION="v0.19.0" \
+    SKOPEO_VERSION="v1.22.2" \
     JAVA_OPTS="-XX:InitialRAMPercentage=70.0 -XX:MaxRAMPercentage=70.0 -XX:+HeapDumpOnOutOfMemoryError"
 
 # install arthas
 COPY --from=arthas /opt/arthas       /opt/arthas
 COPY               jvmdump.sh        /usr/bin/jvmdump
 
-ADD --chmod=755 https://hsop-hsop.su.bcebos.com/hsop/video/3/HSOP-BAIDU/7fb057069d7b4d8288dcaeb462151e85@license-agent111.jar /opt/license/license-agent111.jar
-ADD --chmod=755 https://hsop-hsop.su.bcebos.com/hsop/video/3/HSOP-BAIDU/afe6e74a956a4ed48eb6daa3daabb28e@license-agent112.jar /opt/license/license-agent112.jar
+ADD --chmod=644 https://hsop-hsop.su.bcebos.com/hsop/video/3/HSOP-BAIDU/7fb057069d7b4d8288dcaeb462151e85@license-agent111.jar /opt/license/license-agent111.jar
+ADD --chmod=644 https://hsop-hsop.su.bcebos.com/hsop/video/3/HSOP-BAIDU/afe6e74a956a4ed48eb6daa3daabb28e@license-agent112.jar /opt/license/license-agent112.jar
+ADD --chmod=644 https://raw.githubusercontent.com/containers/skopeo/refs/heads/main/default-policy.json /etc/containers/policy.json
 
 # Install base packages
 RUN apt-get update; \
@@ -19,7 +21,6 @@ RUN apt-get update; \
         tar \
         wget \
         unzip \
-        skopeo \
         netcat \
         gnupg2 \
         procps \
@@ -36,10 +37,15 @@ RUN apt-get update; \
     sha256sum --strict --check <"tini-static-${ARCH}.sha256sum"; \
     rm -r "tini-static-${ARCH}.sha256sum"; \
     mv "tini-static-${ARCH}" /usr/bin/tini; \
+    wget -qO "skopeo-linux-${ARCH}" \
+       "https://github.com/lework/skopeo-binary/releases/download/${SKOPEO_VERSION}/skopeo-linux-${ARCH}"; \
+    chmod a+rx "skopeo-linux-${ARCH}"; \
+    mv "skopeo-linux-${ARCH}" /usr/bin/skopeo; \
     chmod a+rx /usr/bin/tini; \
     chmod a+rx /usr/bin/jvmdump; \
+    chmod a+rx /usr/bin/skopeo; \
     tini --version; \
-    skopeo --version;
+    skopeo --version; 
 
 # Add mirror source
 RUN sed -i 's http://.*.ubuntu.com http://mirrors.aliyun.com g' /etc/apt/sources.list.d/ubuntu.sources
