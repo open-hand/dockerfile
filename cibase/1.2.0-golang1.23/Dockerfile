@@ -64,7 +64,7 @@ RUN set -eux; \
     rm -r /tmp/*;
 
 # Add trivy
-RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.44.1; \
+RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.71.2; \
     trivy image --download-db-only;\
     trivy image --download-java-db-only;
 
