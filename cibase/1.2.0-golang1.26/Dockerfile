@@ -2,7 +2,7 @@ FROM mikefarah/yq:4.35.1 AS yq
 FROM docker:29-cli AS docker
 FROM gcr.io/kaniko-project/executor:v1.24.0 AS kaniko
 
-FROM golang:1.23-bookworm
+FROM golang:1.26-bookworm
 RUN go install github.com/jstemmer/go-junit-report/v2@latest
 
 ENV TZ="Asia/Shanghai" \
