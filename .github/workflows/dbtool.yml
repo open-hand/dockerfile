@@ -32,6 +32,8 @@ jobs:
             --build-arg USERNAME=${{ secrets.NEXUS_USERNAME }} \
             --build-arg PASSWORD=${{ secrets.NEXUS_PASSWORD }} \
             --platform linux/amd64,linux/arm64 \
+            --provenance=false \
+            --sbom=false \
             --file ${file_path} \
             --tag ${{ secrets.DOCKERHUB_USERNAME }}/$(dirname $file_path | sed 's / : g') \
             ${file_path%/*}
