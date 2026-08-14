@@ -1,10 +1,5 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0
 
-# RUN apt-get update && \
-#     apt-get install -y \
-#       openjdk-11-jre \
-#   && rm -rf /var/lib/apt/lists/*
-
 RUN apt-get update && \
     apt-get install -y \
       curl \
@@ -23,8 +18,9 @@ RUN apt-get update && \
       ca-certificates \
       build-essential \
       apt-transport-https \
+      openjdk-17-jre \
   && rm -rf /var/lib/apt/lists/*
 
 RUN dotnet tool install --global dotnet-sonarscanner --version 11.2.1
 
-ENV PATH="${HOME}/.dotnet/tools:${PATH}"
+ENV PATH="$PATH:/root/.dotnet/tools"
