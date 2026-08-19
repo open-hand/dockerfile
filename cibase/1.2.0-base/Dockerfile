@@ -1,12 +1,13 @@
-FROM mikefarah/yq:4.35.1 AS yq
-FROM docker:23.0.6-cli AS docker
+FROM docker.xuanyuan.me/mikefarah/yq:4.35.1 AS yq
+FROM docker.xuanyuan.me/library/docker:23.0.6-cli AS docker
 FROM gcr.io/kaniko-project/executor:v1.14.0 AS kaniko
 
-FROM ubuntu:22.04
+FROM docker.xuanyuan.me/library/ubuntu:22.04
 ENV TZ="Asia/Shanghai" \
     ROOT_PASSWORD="changeit" \
     HELM_VERSION="v3.12.3" \
     PATH="/kaniko:${PATH}"
+
 
 # install yq
 COPY --from=yq /usr/bin/yq /usr/bin/yq

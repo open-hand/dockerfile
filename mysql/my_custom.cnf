@@ -1,0 +1,44 @@
+[mysqld]
+## 原有必填配置
+lower_case_table_names=1
+default-time_zone = '+8:00'
+max_allowed_packet=256M
+
+## 1.连接配置
+max_connections=2000
+wait_timeout=86400
+interactive_timeout=86400
+connect_timeout=10
+
+## 2.字符集(全局utf8mb4，兼容emoji)
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+
+## 3.InnoDB核心（mysql8默认引擎，最重要）
+default_storage_engine=InnoDB
+innodb_buffer_pool_size=1G
+innodb_log_file_size=256M
+innodb_log_buffer_size=64M
+innodb_flush_log_at_trx_commit=1
+innodb_file_per_table=1
+innodb_autoinc_lock_mode=2
+
+## 4.排序/分组缓存
+sort_buffer_size=2M
+join_buffer_size=2M
+tmp_table_size=64M
+max_heap_table_size=64M
+
+## 5.慢查询日志（线上故障排查必备）
+slow_query_log=ON
+slow_query_log_file=/bitnami/mysql/data/slow.log
+long_query_time=2
+
+## 6.禁用ssl（内网k8s集群不需要ssl可关闭，公网访问开启）
+skip-ssl
+
+## 7.禁用域名解析加速连接
+skip-name-resolve
+
+[mysql]
+default-character-set=utf8mb4
