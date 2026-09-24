@@ -3,7 +3,7 @@ FROM eclipse-temurin:17-jdk-jammy
 
 ENV TZ="Asia/Shanghai" \
     TINI_VERSION="v0.19.0" \
-    JAVA_OPTS="-XX:InitialRAMPercentage=70.0 -XX:MaxRAMPercentage=70.0 -XX:+HeapDumpOnOutOfMemoryError"
+    JAVA_OPTS="-XX:InitialRAMPercentage=60.0 -XX:MaxRAMPercentage=60.0 -XX:+HeapDumpOnOutOfMemoryError"
 
 # install arthas
 COPY --from=arthas /opt/arthas       /opt/arthas
@@ -40,6 +40,15 @@ RUN apt-get update; \
     chmod a+rx /usr/bin/jvmdump; \
     tini --version; \
     skopeo --version;
+
+# Import Choerodon root CA into both the system trust store (/etc/ssl/certs,
+# used by curl/wget/openssl/etc.) and the JDK truststore (cacerts).
+# update-ca-certificates only picks up PEM certs with a .crt suffix.
+COPY choerodon-ca.crt /usr/local/share/ca-certificates/choerodon-ca.crt
+RUN update-ca-certificates \
+    && keytool -importcert -cacerts -alias choerodon-ca -noprompt \
+        -storepass changeit \
+        -file /usr/local/share/ca-certificates/choerodon-ca.crt
 
 # Add mirror source
 RUN sed -i 's http://.*.ubuntu.com http://mirrors.aliyun.com g' /etc/apt/sources.list
